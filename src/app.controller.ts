@@ -1,12 +1,27 @@
-import { Controller, Get } from '@nestjs/common';
-import { AppService } from './app.service';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { date, datetimeRegex, z } from 'zod';
+import { ZodValidationPipe } from './pipes/zod-validation-pipe';
 
-@Controller()
+const createProductBodySchema = z.object({
+  name: z.string().min(3).max(20),
+  model: z.string().min(3).max(20),
+  dateManufacture: z.string(),
+  year: z.string(),
+  brand: z.string().min(3).max(20),
+  email: z.string().email(),
+  cpf: z.string().regex(new RegExp("^[0-9]{3}.?[0-9]{3}.?[0-9]{3}-?[0-9]{2}"))
+});
+
+const bodyValidationPipe = new ZodValidationPipe(createProductBodySchema);
+
+type createProductBodySchema = z.infer<typeof createProductBodySchema>;
+
+@Controller('/products')
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor() {}
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  @Post()
+  create(@Body(bodyValidationPipe) body: createProductBodySchema): string {
+    return "create";
   }
 }
