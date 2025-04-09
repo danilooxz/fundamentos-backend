@@ -9,7 +9,7 @@ const createProductBodySchema = z.object({
   year: z.string(),
   brand: z.string().min(3).max(20),
   email: z.string().email(),
-  cpf: z.string().regex(new RegExp("^[0-9]{3}.?[0-9]{3}.?[0-9]{3}-?[0-9]{2}"))
+  cpf: z.string().regex(new RegExp("^[0-9]{3}.?[0-9]{3}.?[0-9]{3}-?[0-9]{2}"),"CPF Invalid")
 });
 
 const bodyValidationPipe = new ZodValidationPipe(createProductBodySchema);
